@@ -31,30 +31,40 @@ func run(part2 bool, input string) any {
 	}
 
 	for _, line := range lines {
-		lineSplitted := strings.Split(line, ":")
-		game := lineSplitted[0]
-		gameIdStr := strings.Split(game, " ")
-		sets := lineSplitted[1]
+		game, sets := parseLine(line)
 		if isValid(sets, colorMap) {
-			gameIdInt, _ := strconv.Atoi(gameIdStr[len(gameIdStr)-1])
-			sum += gameIdInt
+			sum += extractGameID(game)
 		}
-
 	}
 	return sum
+}
+
+func parseLine(line string) (string, string) {
+	parts := strings.SplitN(line, ":", 2)
+	return parts[0], parts[1]
+}
+
+func extractGameID(game string) int {
+	gameIDStr := strings.Fields(game)
+	gameID, _ := strconv.Atoi(gameIDStr[len(gameIDStr)-1])
+	return gameID
 }
 
 func isValid(sets string, colorMap map[string]int) bool {
 	for _, set := range strings.Split(sets, ";") {
 		for _, colorAndNum := range strings.Split(set, ",") {
-			colorAndNum := strings.TrimSpace(colorAndNum)
-			numStr := strings.Split(colorAndNum, " ")[0]
-			num, _ := strconv.Atoi(numStr)
-			color := strings.Split(colorAndNum, " ")[1]
-			if value, exsists := colorMap[color]; exsists && num > value {
+			color, num := parseColorAndNum(colorAndNum)
+			if value, exists := colorMap[color]; exists && num > value {
 				return false
 			}
 		}
 	}
 	return true
+}
+
+func parseColorAndNum(colorAndNum string) (string, int) {
+	parts := strings.Fields(colorAndNum)
+	num, _ := strconv.Atoi(parts[0])
+	color := parts[1]
+	return color, num
 }
