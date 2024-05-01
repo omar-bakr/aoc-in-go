@@ -82,8 +82,7 @@ func getFirstDigit(word string, nums map[string]string) int {
 
 		for j := 3; j <= 5 && i+j <= len(word); j++ {
 			digit := word[i : i+j]
-			value, exsists := nums[digit]
-			if exsists {
+			if value, exsists := nums[digit]; exsists {
 				num, _ := strconv.Atoi(value)
 				return num
 			}
@@ -104,8 +103,7 @@ func getLastDigit(word string, nums map[string]string) int {
 
 		for j := 3; j <= 5 && i-j+1 >= 0; j++ {
 			digit := word[i-j+1 : i+1]
-			value, exists := nums[digit]
-			if exists {
+			if value, exists := nums[digit]; exists {
 				num, _ := strconv.Atoi(value)
 				return num
 			}
