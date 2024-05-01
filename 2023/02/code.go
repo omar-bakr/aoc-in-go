@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"strconv"
 	"strings"
 
@@ -27,7 +28,11 @@ func run(part2 bool, input string) any {
 	}
 
 	if part2 {
-		return "not implemented"
+		for _, line := range lines {
+			_, sets := parseLine(line)
+			sum += getMinColorsPower(sets)
+		}
+		return sum
 	}
 
 	for _, line := range lines {
@@ -67,4 +72,25 @@ func parseColorAndNum(colorAndNum string) (string, int) {
 	num, _ := strconv.Atoi(parts[0])
 	color := parts[1]
 	return color, num
+}
+
+func getMinColorsPower(sets string) int {
+	maxMap := map[string]int{
+		"red":   -1,
+		"green": -1,
+		"blue":  -1,
+	}
+	for _, set := range strings.Split(sets, ";") {
+		for _, colorAndNum := range strings.Split(set, ",") {
+			color, num := parseColorAndNum(colorAndNum)
+			maxMap[color] = int(math.Max(float64(num), float64(maxMap[color])))
+		}
+	}
+
+	product := 1
+
+	for _, v := range maxMap {
+		product *= v
+	}
+	return product
 }
